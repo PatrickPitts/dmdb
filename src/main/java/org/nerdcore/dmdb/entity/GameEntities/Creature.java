@@ -2,10 +2,7 @@ package org.nerdcore.dmdb.entity.GameEntities;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity(name = "Creature")
 @DiscriminatorValue(value = "Creature")
@@ -15,26 +12,46 @@ public class Creature extends GameEntity implements Serializable {
     private double challengeRating;
     private Size size;
     private Alignment alignment;
-    private int armorClass;
+
     private String armorClassQualifier;
-    private String hitPointString;
+
+    private int hitDieBase = 0;
+    private int hitDieCount = 0;
+
+    private int armorClass = 10;
     private int groundSpeed = 0;
     private int burrowSpeed = 0;
     private int climbSpeed = 0;
     private int flySpeed = 0;
     private int swimSpeed = 0;
     private DefaultCreatureType creatureType;
+
+    @ElementCollection(targetClass = String.class)
     private List<String> skills = new ArrayList<>();
-    private List<String> vulnerabilities = new ArrayList<>();
-    //private List<String> immunities = new ArrayList<>();
+
+    @ElementCollection(targetClass = String.class)
+    private List<String> damageVulnerabilities = new ArrayList<>();
+
+    @ElementCollection(targetClass = String.class)
+    private List<String> damageImmunities = new ArrayList<>();
+
+    @ElementCollection(targetClass = String.class)
+    private List<String> damageResistances = new ArrayList<>();
+
+    @ElementCollection(targetClass = String.class)
+    private List<String> conditionImmunities = new ArrayList<>();
+
+
     private int blindsight = 0;
     private int darkvision = 0;
     private int tremorsense = 0;
     private int truesight = 0;
     private int passivePerception = 10;
     private int[] abilityScores = {10, 10, 10, 10, 10, 10};
-    @MapKeyEnumerated
-    private Map<AbilityScore, Boolean> savingThrows = new HashMap(){{
+    @ElementCollection
+    @MapKeyColumn(name="ability_score")
+    @MapKeyEnumerated(EnumType.STRING)
+    private Map<AbilityScore, Boolean> savingThrows = new HashMap<AbilityScore, Boolean>(){{
         put(AbilityScore.STR, false);
         put(AbilityScore.DEX, false);
         put(AbilityScore.CON, false);
@@ -59,12 +76,44 @@ public class Creature extends GameEntity implements Serializable {
         ABERRATION, BEAST, CELESTIAL, CONSTRUCT, DRAGON, ELEMENTAL, FEY, FIEND, GIANT, HUMANOID, MONSTROSITY, OOZE, PLANT, UNDEAD
     }
 
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CreatureAbility> abilities = new ArrayList<>();
 
     public Creature() {
     }
+
+    public List<String> getDamageVulnerabilities() {
+        return damageVulnerabilities;
+    }
+
+    public void setDamageVulnerabilities(List<String> damageVulnerabilities) {
+        this.damageVulnerabilities = damageVulnerabilities;
+    }
+
+    public List<String> getDamageImmunities() {
+        return damageImmunities;
+    }
+
+    public void setDamageImmunities(List<String> damageImmunities) {
+        this.damageImmunities = damageImmunities;
+    }
+
+    public List<String> getDamageResistances() {
+        return damageResistances;
+    }
+
+    public void setDamageResistances(List<String> damageResistances) {
+        this.damageResistances = damageResistances;
+    }
+
+    public List<String> getConditionImmunities() {
+        return conditionImmunities;
+    }
+
+    public void setConditionImmunities(List<String> conditionImmunities) {
+        this.conditionImmunities = conditionImmunities;
+    }
+
 
     public Map<AbilityScore, Boolean> getSavingThrows() {
         return savingThrows;
@@ -110,12 +159,20 @@ public class Creature extends GameEntity implements Serializable {
         this.armorClassQualifier = armorClassQualifier;
     }
 
-    public String getHitPointString() {
-        return hitPointString;
+    public int getHitDieBase() {
+        return hitDieBase;
     }
 
-    public void setHitPointString(String hitPointString) {
-        this.hitPointString = hitPointString;
+    public void setHitDieBase(int hitDieBase) {
+        this.hitDieBase = hitDieBase;
+    }
+
+    public int getHitDieCount() {
+        return hitDieCount;
+    }
+
+    public void setHitDieCount(int hitDieCount) {
+        this.hitDieCount = hitDieCount;
     }
 
     public int getGroundSpeed() {
@@ -173,22 +230,6 @@ public class Creature extends GameEntity implements Serializable {
     public void setSkills(List<String> skills) {
         this.skills = skills;
     }
-
-    public List<String> getVulnerabilities() {
-        return vulnerabilities;
-    }
-
-    public void setVulnerabilities(List<String> vulnerabilities) {
-        this.vulnerabilities = vulnerabilities;
-    }
-
-//    public List<String> getImmunities() {
-//        return immunities;
-//    }
-//
-//    public void setImmunities(List<String> immunities) {
-//        this.immunities = immunities;
-//    }
 
     public int getBlindsight() {
         return blindsight;
@@ -262,9 +303,10 @@ public class Creature extends GameEntity implements Serializable {
         this.abilities.add(ability);
     }
 
+    @PrePersist
     public void cleanup() {
         for (CreatureAbility c : abilities) {
-            if (c.getAbilityName() == null) {
+            if (c.getAbilityName().length() <= 0) {
                 abilities.remove(c);
             }
         }

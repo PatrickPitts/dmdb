@@ -41,6 +41,8 @@ public class HomeController {
         creature.setCreatureName("Goblin");
         creature.addAbility(new CreatureAbility("Stab", "Stab a guy", CreatureAbility.AbilityType.ACTION, creature));
 
+        gameEntityRepository.saveAndFlush(creature);
+
         Creature c = gameEntityRepository.findAllCreatures().get(0);
 
         return ResponseEntity.ok(c);

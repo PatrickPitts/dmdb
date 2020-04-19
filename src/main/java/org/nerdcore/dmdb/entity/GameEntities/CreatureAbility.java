@@ -22,6 +22,7 @@ public class CreatureAbility implements Serializable {
     private int limitedUsageLower = -1;
     private int limitedUsageUpper = -1;
     private String hitDamage;
+    private boolean isAttack = false;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -48,6 +49,14 @@ public class CreatureAbility implements Serializable {
         this.abilityDescription = abilityDescription;
         this.abilityType = abilityType;
         this.owningCreature = owningCreature;
+    }
+
+    public boolean isAttack() {
+        return isAttack;
+    }
+
+    public void setAttack(boolean attack) {
+        isAttack = attack;
     }
 
     public long getAbilityId() {
