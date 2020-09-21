@@ -1,42 +1,48 @@
 package org.nerdcore.dmdb;
 
 
-import org.springframework.data.relational.core.sql.In;
 
+import static org.nerdcore.dmdb.services.StringManipulationService.*;
+
+import org.nerdcore.dmdb.entity.GameEntities.GameMapDescriptor;
+import org.nerdcore.dmdb.entity.GameEntities.GameMapWithDescriptors;
+import org.nerdcore.dmdb.entity.GameEntities.SimpleCreature;
+
+import javax.websocket.CloseReason;
+
+import static org.nerdcore.dmdb.entity.GameEntities.Creature.Size;
+import static org.nerdcore.dmdb.entity.GameEntities.Creature.Alignment;
+import static org.nerdcore.dmdb.entity.GameEntities.Creature.DefaultCreatureType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Test {
 
     public static void main(String[] args) {
-        for(int n : digitList(100000)){
-            System.out.println(n);
-        }
+
+
+//
+//        List<GameMapDescriptor> descriptors = new ArrayList<>();
+//        descriptors.add(new GameMapDescriptor("5", "5"));
+//        descriptors.add(new GameMapDescriptor("1A", "1A"));
+//        descriptors.add(new GameMapDescriptor("3", "3"));
+//        descriptors.add(new GameMapDescriptor("1", "1"));
+//        descriptors.add(new GameMapDescriptor("4", "4"));
+//        descriptors.add(new GameMapDescriptor("2A", "2A"));
+//        descriptors.add(new GameMapDescriptor("2C", "2C"));
+//        descriptors.add(new GameMapDescriptor("2B", "2B"));
+//
+//        descriptors.sort(GameMapDescriptor::compareTo);
+//        System.out.println(descriptors);
+//
+//
+        GameMapWithDescriptors g = new GameMapWithDescriptors("Tomb of Horrors");
+
+
+
     }
 
-    public static String[] removeAllOfLen(int len){
-        String[] oldArr = {"the","quick","brown", "fox", "jumped", "over", "the","lazy", "dog"};
 
-        String[] newArr = new String[oldArr.length - 4];
-
-        int j = 0;
-        for(int i=0; i < oldArr.length;i++){
-            if(oldArr[i].length() != len){
-                newArr[j] = oldArr[i];
-                j++;
-            }
-        }
-        return newArr;
-
-    }
-
-    public static ArrayList<Integer> digitList(int num){
-        ArrayList<Integer> digits = new ArrayList<>();
-        int len = Integer.toString(num).length();
-        for(int i = 0; i < len; i++){
-            digits.add(0, num%10);
-            num/=10;
-        }
-        return digits;
-    }
 }

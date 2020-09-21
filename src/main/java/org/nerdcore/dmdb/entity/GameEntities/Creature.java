@@ -8,21 +8,37 @@ import java.util.*;
 @DiscriminatorValue(value = "Creature")
 public class Creature extends GameEntity implements Serializable {
 
-    private String creatureName;
-    private double challengeRating;
-    private Size size;
-    private Alignment alignment;
+    @Column(name="creatureName")
+    private String creatureName = "";
+
+    @Column(name="challangeRating")
+    private double challengeRating = 1.0;
+
+    @Column(name="size")
+    private Size size = Size.MEDIUM;
+
+    @Column(name="alignment")
+    private Alignment alignment = Alignment.UNALIGNED;
 
     private String armorClassQualifier;
 
+    @Column(name="hitDieBase")
     private int hitDieBase = 0;
+
+    @Column(name="hitDieCount")
     private int hitDieCount = 0;
 
+    @Column(name="armorClass")
     private int armorClass = 10;
+    @Column(name="groundSpeed")
     private int groundSpeed = 0;
+    @Column(name="burrowSpeed")
     private int burrowSpeed = 0;
+    @Column(name="climbSpeed")
     private int climbSpeed = 0;
+    @Column(name="flySpeed")
     private int flySpeed = 0;
+    @Column(name="swimSpeed")
     private int swimSpeed = 0;
     private DefaultCreatureType creatureType;
 
