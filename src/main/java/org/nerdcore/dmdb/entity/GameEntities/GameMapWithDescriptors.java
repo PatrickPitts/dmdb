@@ -24,6 +24,8 @@ public class GameMapWithDescriptors {
     @OneToMany(mappedBy = "gameMap", cascade = CascadeType.ALL)
     private List<GameMapDescriptor> descriptors;
 
+    private int gridPixelWidth;
+
     public GameMapWithDescriptors(){}
 
     public GameMapWithDescriptors(String mapName, List<GameMapDescriptor> descriptors) {
